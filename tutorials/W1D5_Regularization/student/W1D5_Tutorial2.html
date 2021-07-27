@@ -534,6 +534,11 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l1">
+<a class="reference internal" href="../../../projects/docs/project_templates.html">
+   Project Templates
+  </a>
+</li>
 </ul>
 </div>
 </nav> <!-- To handle the deprecated key -->
@@ -895,7 +900,9 @@
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Reading state information...
-ffmpeg is already the newest version (7:4.2.4-1ubuntu0.1).
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>ffmpeg is already the newest version (7:4.2.4-1ubuntu0.1).
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0 upgraded, 0 newly installed, 0 to remove and 13 not upgraded.
@@ -1111,6 +1118,8 @@ ffmpeg is already the newest version (7:4.2.4-1ubuntu0.1).
     <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
     <span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
 
+  <span class="k">return</span> <span class="n">model</span>
+
 
 <span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">test_loader</span><span class="p">,</span> <span class="n">loader</span><span class="o">=</span><span class="s1">'Test'</span><span class="p">,</span> <span class="n">criterion</span><span class="o">=</span><span class="n">F</span><span class="o">.</span><span class="n">nll_loss</span><span class="p">,</span>
          <span class="n">device</span><span class="o">=</span><span class="s1">'cpu'</span><span class="p">):</span>
@@ -1158,17 +1167,17 @@ ffmpeg is already the newest version (7:4.2.4-1ubuntu0.1).
 
   <span class="n">val_acc_list</span><span class="p">,</span> <span class="n">train_acc_list</span><span class="p">,</span><span class="n">param_norm_list</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[]</span>
   <span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="s1">'epochs'</span><span class="p">])):</span>
-    <span class="n">train</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">train_loader</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span> <span class="n">epoch</span><span class="p">,</span>
-          <span class="n">reg_function1</span><span class="o">=</span><span class="n">reg_function1</span><span class="p">,</span>
-          <span class="n">reg_function2</span><span class="o">=</span><span class="n">reg_function2</span><span class="p">)</span>
-    <span class="n">train_acc</span> <span class="o">=</span> <span class="n">test</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">train_loader</span><span class="p">,</span> <span class="n">loader</span><span class="o">=</span><span class="s1">'Train'</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
-    <span class="n">val_acc</span> <span class="o">=</span> <span class="n">test</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">val_loader</span><span class="p">,</span> <span class="n">loader</span><span class="o">=</span><span class="s1">'Val'</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
-    <span class="n">param_norm</span> <span class="o">=</span> <span class="n">calculate_frobenius_norm</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+    <span class="n">trained_model</span> <span class="o">=</span> <span class="n">train</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">train_loader</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span> <span class="n">epoch</span><span class="p">,</span>
+                          <span class="n">reg_function1</span><span class="o">=</span><span class="n">reg_function1</span><span class="p">,</span>
+                          <span class="n">reg_function2</span><span class="o">=</span><span class="n">reg_function2</span><span class="p">)</span>
+    <span class="n">train_acc</span> <span class="o">=</span> <span class="n">test</span><span class="p">(</span><span class="n">trained_model</span><span class="p">,</span> <span class="n">train_loader</span><span class="p">,</span> <span class="n">loader</span><span class="o">=</span><span class="s1">'Train'</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+    <span class="n">val_acc</span> <span class="o">=</span> <span class="n">test</span><span class="p">(</span><span class="n">trained_model</span><span class="p">,</span> <span class="n">val_loader</span><span class="p">,</span> <span class="n">loader</span><span class="o">=</span><span class="s1">'Val'</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+    <span class="n">param_norm</span> <span class="o">=</span> <span class="n">calculate_frobenius_norm</span><span class="p">(</span><span class="n">trained_model</span><span class="p">)</span>
     <span class="n">train_acc_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">train_acc</span><span class="p">)</span>
     <span class="n">val_acc_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val_acc</span><span class="p">)</span>
     <span class="n">param_norm_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">param_norm</span><span class="p">)</span>
 
-  <span class="k">return</span> <span class="n">val_acc_list</span><span class="p">,</span> <span class="n">train_acc_list</span><span class="p">,</span> <span class="n">param_norm_list</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="mi">0</span>
+  <span class="k">return</span> <span class="n">val_acc_list</span><span class="p">,</span> <span class="n">train_acc_list</span><span class="p">,</span> <span class="n">param_norm_list</span><span class="p">,</span> <span class="n">model</span>
 
 
 <span class="k">def</span> <span class="nf">calculate_frobenius_norm</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
@@ -1198,18 +1207,18 @@ ffmpeg is already the newest version (7:4.2.4-1ubuntu0.1).
 
   <span class="n">val_acc_list</span><span class="p">,</span> <span class="n">train_acc_list</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
   <span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="s1">'epochs'</span><span class="p">])):</span>
-    <span class="n">train</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">device</span><span class="p">,</span> <span class="n">train_loader</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span> <span class="n">epoch</span><span class="p">)</span>
-    <span class="n">train_acc</span> <span class="o">=</span> <span class="n">test</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">train_loader</span><span class="p">,</span> <span class="n">loader</span><span class="o">=</span><span class="s1">'Train'</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
-    <span class="n">val_acc</span> <span class="o">=</span> <span class="n">test</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">val_loader</span><span class="p">,</span> <span class="n">loader</span><span class="o">=</span><span class="s1">'Val'</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+    <span class="n">trained_model</span> <span class="o">=</span> <span class="n">train</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">device</span><span class="p">,</span> <span class="n">train_loader</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">,</span> <span class="n">epoch</span><span class="p">)</span>
+    <span class="n">train_acc</span> <span class="o">=</span> <span class="n">test</span><span class="p">(</span><span class="n">trained_model</span><span class="p">,</span> <span class="n">train_loader</span><span class="p">,</span> <span class="n">loader</span><span class="o">=</span><span class="s1">'Train'</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+    <span class="n">val_acc</span> <span class="o">=</span> <span class="n">test</span><span class="p">(</span><span class="n">trained_model</span><span class="p">,</span> <span class="n">val_loader</span><span class="p">,</span> <span class="n">loader</span><span class="o">=</span><span class="s1">'Val'</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">val_acc</span> <span class="o">&gt;</span> <span class="n">best_acc</span><span class="p">):</span>
       <span class="n">best_acc</span> <span class="o">=</span> <span class="n">val_acc</span>
       <span class="n">best_epoch</span> <span class="o">=</span> <span class="n">epoch</span>
-      <span class="n">best_model</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+      <span class="n">best_model</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">trained_model</span><span class="p">)</span>
       <span class="n">wait</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="k">else</span><span class="p">:</span>
       <span class="n">wait</span> <span class="o">+=</span> <span class="mi">1</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">wait</span> <span class="o">&gt;</span> <span class="n">patience</span><span class="p">):</span>
-      <span class="nb">print</span><span class="p">(</span><span class="s1">'early stopped on epoch:'</span><span class="p">,</span><span class="n">epoch</span><span class="p">)</span>
+      <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'early stopped on epoch: </span><span class="si">{</span><span class="n">epoch</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
       <span class="k">break</span>
     <span class="n">train_acc_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">train_acc</span><span class="p">)</span>
     <span class="n">val_acc_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val_acc</span><span class="p">)</span>
@@ -1321,10 +1330,14 @@ ffmpeg is already the newest version (7:4.2.4-1ubuntu0.1).
                                                                <span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">14430</span><span class="p">])</span>
 
 <span class="c1">#Creating train_loader and Val_loader</span>
-<span class="n">train_loader</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">DataLoader</span><span class="p">(</span><span class="n">img_train_data</span><span class="p">,</span><span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span>
+<span class="n">train_loader</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">DataLoader</span><span class="p">(</span><span class="n">img_train_data</span><span class="p">,</span>
+                                           <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span>
                                            <span class="n">worker_init_fn</span><span class="o">=</span><span class="n">seed_worker</span><span class="p">,</span>
+                                           <span class="n">num_workers</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
                                            <span class="n">generator</span><span class="o">=</span><span class="n">g_seed</span><span class="p">)</span>
-<span class="n">val_loader</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">DataLoader</span><span class="p">(</span><span class="n">img_val_data</span><span class="p">,</span><span class="n">batch_size</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+<span class="n">val_loader</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">DataLoader</span><span class="p">(</span><span class="n">img_val_data</span><span class="p">,</span>
+                                         <span class="n">batch_size</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+                                         <span class="n">num_workers</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
                                          <span class="n">worker_init_fn</span><span class="o">=</span><span class="n">seed_worker</span><span class="p">,</span>
                                          <span class="n">generator</span><span class="o">=</span><span class="n">g_seed</span><span class="p">)</span>
 
@@ -1348,12 +1361,12 @@ ffmpeg is already the newest version (7:4.2.4-1ubuntu0.1).
 <span class="c1">#Randomized train and validation dataloader</span>
 <span class="n">rand_train_loader</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">DataLoader</span><span class="p">(</span><span class="n">random_img_train_data</span><span class="p">,</span>
                                                 <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span>
-                                                <span class="n">num_workers</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                                                <span class="n">num_workers</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
                                                 <span class="n">worker_init_fn</span><span class="o">=</span><span class="n">seed_worker</span><span class="p">,</span>
                                                 <span class="n">generator</span><span class="o">=</span><span class="n">g_seed</span><span class="p">)</span>
 <span class="n">rand_val_loader</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">DataLoader</span><span class="p">(</span><span class="n">random_img_val_data</span><span class="p">,</span>
                                               <span class="n">batch_size</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
-                                              <span class="n">num_workers</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                                              <span class="n">num_workers</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
                                               <span class="n">worker_init_fn</span><span class="o">=</span><span class="n">seed_worker</span><span class="p">,</span>
                                               <span class="n">generator</span><span class="o">=</span><span class="n">g_seed</span><span class="p">)</span>
 
@@ -1368,12 +1381,13 @@ ffmpeg is already the newest version (7:4.2.4-1ubuntu0.1).
 
 <span class="c1">#Training and Validation loader for partially randomized data</span>
 <span class="n">partial_rand_train_loader</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">DataLoader</span><span class="p">(</span><span class="n">partially_random_train_data</span><span class="p">,</span>
-                                                        <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span><span class="n">num_workers</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+                                                        <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span>
+                                                        <span class="n">num_workers</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
                                                         <span class="n">worker_init_fn</span><span class="o">=</span><span class="n">seed_worker</span><span class="p">,</span>
                                                         <span class="n">generator</span><span class="o">=</span><span class="n">g_seed</span><span class="p">)</span>
 <span class="n">partial_rand_val_loader</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">DataLoader</span><span class="p">(</span><span class="n">partially_random_val_data</span><span class="p">,</span>
                                                       <span class="n">batch_size</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
-                                                      <span class="n">num_workers</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+                                                      <span class="n">num_workers</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
                                                       <span class="n">worker_init_fn</span><span class="o">=</span><span class="n">seed_worker</span><span class="p">,</span>
                                                       <span class="n">generator</span><span class="o">=</span><span class="n">g_seed</span><span class="p">)</span>
 </pre></div>
@@ -1414,10 +1428,12 @@ ffmpeg is already the newest version (7:4.2.4-1ubuntu0.1).
 <span class="n">reg_train_loader</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">DataLoader</span><span class="p">(</span><span class="n">reg_train_data</span><span class="p">,</span>
                                                <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span>
                                                <span class="n">worker_init_fn</span><span class="o">=</span><span class="n">seed_worker</span><span class="p">,</span>
+                                               <span class="n">num_workers</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
                                                <span class="n">generator</span><span class="o">=</span><span class="n">g_seed</span><span class="p">)</span>
 <span class="n">reg_val_loader</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">DataLoader</span><span class="p">(</span><span class="n">reg_val_data</span><span class="p">,</span>
                                              <span class="n">batch_size</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
                                              <span class="n">worker_init_fn</span><span class="o">=</span><span class="n">seed_worker</span><span class="p">,</span>
+                                             <span class="n">num_workers</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
                                              <span class="n">generator</span><span class="o">=</span><span class="n">g_seed</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -1439,11 +1455,11 @@ ffmpeg is already the newest version (7:4.2.4-1ubuntu0.1).
 <span class="n">model</span> <span class="o">=</span> <span class="n">AnimalNet</span><span class="p">()</span>
 
 <span class="c1"># Train the model</span>
-<span class="n">val_acc_unreg</span><span class="p">,</span> <span class="n">train_acc_unreg</span><span class="p">,</span><span class="n">param_norm_unreg</span><span class="p">,</span><span class="n">_</span> <span class="p">,</span><span class="n">_</span> <span class="o">=</span> <span class="n">main</span><span class="p">(</span><span class="n">args</span><span class="p">,</span>
-                                                            <span class="n">model</span><span class="p">,</span>
-                                                            <span class="n">reg_train_loader</span><span class="p">,</span>
-                                                            <span class="n">reg_val_loader</span><span class="p">,</span>
-                                                            <span class="n">img_test_dataset</span><span class="p">)</span>
+<span class="n">val_acc_unreg</span><span class="p">,</span> <span class="n">train_acc_unreg</span><span class="p">,</span> <span class="n">param_norm_unreg</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">main</span><span class="p">(</span><span class="n">args</span><span class="p">,</span>
+                                                           <span class="n">model</span><span class="p">,</span>
+                                                           <span class="n">reg_train_loader</span><span class="p">,</span>
+                                                           <span class="n">reg_val_loader</span><span class="p">,</span>
+                                                           <span class="n">img_test_dataset</span><span class="p">)</span>
 
 <span class="c1"># Train and Test accuracy plot</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
@@ -1465,18 +1481,18 @@ ffmpeg is already the newest version (7:4.2.4-1ubuntu0.1).
 <div class="section" id="section-1-2-l1-regularization">
 <h2>Section 1.2: L1 Regularization<a class="headerlink" href="#section-1-2-l1-regularization" title="Permalink to this headline">¶</a></h2>
 <p>L1 (or “LASSO”) Regularization uses a penalty which is the sum of the absolute value of all the weights in the DLN, resulting in the following loss function (L  is the usual Cross Entropy loss):</p>
-<div class="amsmath math notranslate nohighlight" id="equation-cecdd884-3cb3-4d2c-9591-e90261ff354b">
-<span class="eqno">(48)<a class="headerlink" href="#equation-cecdd884-3cb3-4d2c-9591-e90261ff354b" title="Permalink to this equation">¶</a></span>\[\begin{equation}
+<div class="amsmath math notranslate nohighlight" id="equation-80a025fe-6df0-453a-8101-5141b38fa0c6">
+<span class="eqno">(48)<a class="headerlink" href="#equation-80a025fe-6df0-453a-8101-5141b38fa0c6" title="Permalink to this equation">¶</a></span>\[\begin{equation}
 L_R=L + \lambda \sum \left| w^{(r)}_{ij} \right|
 \end{equation}\]</div>
 <p>At a high level, L1 Regularization is similar to L2 Regularization since it leads to smaller weights. (You will see the analogy in the next subsection.) It results in the following weight update equation when using Stochastic Gradient Descent:</p>
-<div class="amsmath math notranslate nohighlight" id="equation-78852974-2ea7-4d90-bb4f-f7152c11be50">
-<span class="eqno">(49)<a class="headerlink" href="#equation-78852974-2ea7-4d90-bb4f-f7152c11be50" title="Permalink to this equation">¶</a></span>\[\begin{equation}
+<div class="amsmath math notranslate nohighlight" id="equation-8300cb4f-be92-4172-a31f-3aab5ab4ed13">
+<span class="eqno">(49)<a class="headerlink" href="#equation-8300cb4f-be92-4172-a31f-3aab5ab4ed13" title="Permalink to this equation">¶</a></span>\[\begin{equation}
 w^{(r)}_{ij}←w^{(r)}_{ij}−\eta \lambda \text{sgn}\left(w^{(r)}_{ij}\right)−\eta \frac{\partial L}{\partial w_{ij}^{r}} 
 \end{equation}\]</div>
 <p>where  <span class="math notranslate nohighlight">\(\text{sgn}(\cdot)\)</span> is the sign function, such that</p>
-<div class="amsmath math notranslate nohighlight" id="equation-e31d786e-c0b5-4826-bb9e-e8d5d85b73c8">
-<span class="eqno">(50)<a class="headerlink" href="#equation-e31d786e-c0b5-4826-bb9e-e8d5d85b73c8" title="Permalink to this equation">¶</a></span>\[\begin{equation}
+<div class="amsmath math notranslate nohighlight" id="equation-eb2d8fc5-d3d8-4c06-acdf-6a72d5103866">
+<span class="eqno">(50)<a class="headerlink" href="#equation-eb2d8fc5-d3d8-4c06-acdf-6a72d5103866" title="Permalink to this equation">¶</a></span>\[\begin{equation}
 \text{sgn(w)} = 
 \left\{
   \begin{array}{ll}
@@ -1538,12 +1554,12 @@ w^{(r)}_{ij}←w^{(r)}_{ij}−\eta \lambda \text{sgn}\left(w^{(r)}_{ij}\right)�
 <span class="n">model</span> <span class="o">=</span> <span class="n">AnimalNet</span><span class="p">()</span>
 
 <span class="c1"># Train the model</span>
-<span class="n">val_acc_l1reg</span><span class="p">,</span> <span class="n">train_acc_l1reg</span><span class="p">,</span> <span class="n">param_norm_l1reg</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">main</span><span class="p">(</span><span class="n">args</span><span class="p">,</span>
-                                                              <span class="n">model</span><span class="p">,</span>
-                                                              <span class="n">reg_train_loader</span><span class="p">,</span>
-                                                              <span class="n">reg_val_loader</span><span class="p">,</span>
-                                                              <span class="n">img_test_dataset</span><span class="p">,</span>
-                                                              <span class="n">reg_function1</span><span class="o">=</span><span class="n">l1_reg</span><span class="p">)</span>
+<span class="n">val_acc_l1reg</span><span class="p">,</span> <span class="n">train_acc_l1reg</span><span class="p">,</span> <span class="n">param_norm_l1reg</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">main</span><span class="p">(</span><span class="n">args</span><span class="p">,</span>
+                                                           <span class="n">model</span><span class="p">,</span>
+                                                           <span class="n">reg_train_loader</span><span class="p">,</span>
+                                                           <span class="n">reg_val_loader</span><span class="p">,</span>
+                                                           <span class="n">img_test_dataset</span><span class="p">,</span>
+                                                           <span class="n">reg_function1</span><span class="o">=</span><span class="n">l1_reg</span><span class="p">)</span>
 
 <span class="c1"># Train and Test accuracy plot</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
@@ -1568,18 +1584,18 @@ w^{(r)}_{ij}←w^{(r)}_{ij}−\eta \lambda \text{sgn}\left(w^{(r)}_{ij}\right)�
 <div class="section" id="section-1-3-l2-ridge-regularization">
 <h2>Section 1.3: L2 / Ridge Regularization<a class="headerlink" href="#section-1-3-l2-ridge-regularization" title="Permalink to this headline">¶</a></h2>
 <p>L2 Regularization, sometimes referred to as “Weight Decay”, is widely used. It works by adding a quadratic penalty term to the Cross Entropy Loss Function  L, which results in a new Loss Function  LR  given by:</p>
-<div class="amsmath math notranslate nohighlight" id="equation-3b1553c2-a3ea-4a2a-a213-95ba80c22759">
-<span class="eqno">(51)<a class="headerlink" href="#equation-3b1553c2-a3ea-4a2a-a213-95ba80c22759" title="Permalink to this equation">¶</a></span>\[\begin{equation}
+<div class="amsmath math notranslate nohighlight" id="equation-9725d4a1-1386-4492-a0f9-689640b01e78">
+<span class="eqno">(51)<a class="headerlink" href="#equation-9725d4a1-1386-4492-a0f9-689640b01e78" title="Permalink to this equation">¶</a></span>\[\begin{equation}
 L_R = L + \lambda \sum \left( w^{(r)}_{ij} \right)^2
 \end{equation}\]</div>
 <p>In order to get further insight into L2 Regularization, we investigate its effect on the Gradient Descent based update equations for the weight and bias parameters. Taking the derivative on both sides of the above equation, we obtain</p>
-<div class="amsmath math notranslate nohighlight" id="equation-46f091ab-5f01-4566-839a-08e84201daa0">
-<span class="eqno">(52)<a class="headerlink" href="#equation-46f091ab-5f01-4566-839a-08e84201daa0" title="Permalink to this equation">¶</a></span>\[\begin{equation}
+<div class="amsmath math notranslate nohighlight" id="equation-05086880-bee2-47d9-b4f6-7bc6cf70ec2f">
+<span class="eqno">(52)<a class="headerlink" href="#equation-05086880-bee2-47d9-b4f6-7bc6cf70ec2f" title="Permalink to this equation">¶</a></span>\[\begin{equation}
 \frac{\partial L_r}{\partial w^{(r)}_{ij}}=\frac{\partial L}{\partial w^{(r)}_{ij}} + \lambda w^{(r)}_{ij}cdot
 \end{equation}\]</div>
 <p>Thus the weight update rule becomes:</p>
-<div class="amsmath math notranslate nohighlight" id="equation-5958bcfa-3c0c-47f6-bbdb-168d91622298">
-<span class="eqno">(53)<a class="headerlink" href="#equation-5958bcfa-3c0c-47f6-bbdb-168d91622298" title="Permalink to this equation">¶</a></span>\[\begin{equation}
+<div class="amsmath math notranslate nohighlight" id="equation-c45d140b-2360-4375-8257-d8e2ed769696">
+<span class="eqno">(53)<a class="headerlink" href="#equation-c45d140b-2360-4375-8257-d8e2ed769696" title="Permalink to this equation">¶</a></span>\[\begin{equation}
 w^{(r)}_{ij}←w^{(r)}_{ij}−η\frac{\partial L}{\partial W^{(r)}_{ij}}−\eta \lambda w^{(r)}_{ij}=(1−\eta \lambda)w^{(r)}_{ij} − \eta \frac{\partial L}{\partial w^{(r)}_{ij}}
 \end{equation}\]</div>
 <p>where, <span class="math notranslate nohighlight">\(\eta\)</span> is learning rate.</p>
@@ -1638,12 +1654,12 @@ w^{(r)}_{ij}←w^{(r)}_{ij}−η\frac{\partial L}{\partial W^{(r)}_{ij}}−\eta 
 <span class="n">model</span> <span class="o">=</span> <span class="n">AnimalNet</span><span class="p">()</span>
 
 <span class="c1"># Train the model</span>
-<span class="n">val_acc_l2reg</span><span class="p">,</span> <span class="n">train_acc_l2reg</span><span class="p">,</span> <span class="n">param_norm_l2reg</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">main</span><span class="p">(</span><span class="n">args</span><span class="p">,</span>
-                                                                  <span class="n">model</span><span class="p">,</span>
-                                                                  <span class="n">train_loader</span><span class="p">,</span>
-                                                                  <span class="n">val_loader</span><span class="p">,</span>
-                                                                  <span class="n">img_test_dataset</span><span class="p">,</span>
-                                                                  <span class="n">reg_function2</span><span class="o">=</span><span class="n">l2_reg</span><span class="p">)</span>
+<span class="n">val_acc_l2reg</span><span class="p">,</span> <span class="n">train_acc_l2reg</span><span class="p">,</span> <span class="n">param_norm_l2reg</span><span class="p">,</span> <span class="n">model</span> <span class="o">=</span> <span class="n">main</span><span class="p">(</span><span class="n">args</span><span class="p">,</span>
+                                                               <span class="n">model</span><span class="p">,</span>
+                                                               <span class="n">train_loader</span><span class="p">,</span>
+                                                               <span class="n">val_loader</span><span class="p">,</span>
+                                                               <span class="n">img_test_dataset</span><span class="p">,</span>
+                                                               <span class="n">reg_function2</span><span class="o">=</span><span class="n">l2_reg</span><span class="p">)</span>
 
 <span class="c1">## Train and Test accuracy plot</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
@@ -1676,28 +1692,31 @@ w^{(r)}_{ij}←w^{(r)}_{ij}−η\frac{\partial L}{\partial W^{(r)}_{ij}}−\eta 
         <span class="s1">'lambda1'</span><span class="p">:</span> <span class="mf">0.001</span><span class="p">,</span>
         <span class="s1">'lambda2'</span><span class="p">:</span> <span class="mf">0.001</span>
         <span class="p">}</span>
+
+<span class="c1"># Intialize the model</span>
+<span class="n">set_seed</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="n">SEED</span><span class="p">)</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">AnimalNet</span><span class="p">()</span>
-<span class="n">val_acc_l1l2reg</span><span class="p">,</span> <span class="n">train_acc_l1l2reg</span><span class="p">,</span> <span class="n">param_norm_l1l2reg</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">main</span><span class="p">(</span><span class="n">args</span><span class="p">,</span>
-                                                  <span class="n">model</span><span class="p">,</span>
-                                                  <span class="n">train_loader</span><span class="p">,</span>
-                                                  <span class="n">val_loader</span><span class="p">,</span>
-                                                  <span class="n">img_test_dataset</span><span class="p">,</span>
-                                                  <span class="n">reg_function1</span><span class="o">=</span><span class="n">l1_reg</span><span class="p">,</span>
-                                                  <span class="n">reg_function2</span><span class="o">=</span><span class="n">l2_reg</span><span class="p">)</span>
+<span class="n">val_acc_l1l2reg</span><span class="p">,</span> <span class="n">train_acc_l1l2reg</span><span class="p">,</span> <span class="n">param_norm_l1l2reg</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">main</span><span class="p">(</span><span class="n">args</span><span class="p">,</span>
+                                                                 <span class="n">model</span><span class="p">,</span>
+                                                                 <span class="n">train_loader</span><span class="p">,</span>
+                                                                 <span class="n">val_loader</span><span class="p">,</span>
+                                                                 <span class="n">img_test_dataset</span><span class="p">,</span>
+                                                                 <span class="n">reg_function1</span><span class="o">=</span><span class="n">l1_reg</span><span class="p">,</span>
+                                                                 <span class="n">reg_function2</span><span class="o">=</span><span class="n">l2_reg</span><span class="p">)</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">val_acc_l2reg</span><span class="p">,</span><span class="n">c</span><span class="o">=</span><span class="s1">'red'</span><span class="p">,</span><span class="n">ls</span> <span class="o">=</span> <span class="s1">'dashed'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">train_acc_l2reg</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">'L2 regularized'</span><span class="p">,</span><span class="n">c</span><span class="o">=</span><span class="s1">'red'</span><span class="p">,</span><span class="n">ls</span> <span class="o">=</span> <span class="s1">'solid'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="nb">max</span><span class="p">(</span><span class="n">val_acc_l2reg</span><span class="p">),</span><span class="n">c</span> <span class="o">=</span> <span class="s1">'red'</span><span class="p">,</span><span class="n">ls</span> <span class="o">=</span> <span class="s1">'dashed'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">val_acc_l1reg</span><span class="p">,</span><span class="n">c</span><span class="o">=</span><span class="s1">'green'</span><span class="p">,</span><span class="n">ls</span> <span class="o">=</span> <span class="s1">'dashed'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">train_acc_l1reg</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">'L1 regularized'</span><span class="p">,</span><span class="n">c</span><span class="o">=</span><span class="s1">'green'</span><span class="p">,</span><span class="n">ls</span> <span class="o">=</span> <span class="s1">'solid'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="nb">max</span><span class="p">(</span><span class="n">val_acc_l1reg</span><span class="p">),</span><span class="n">c</span> <span class="o">=</span> <span class="s1">'green'</span><span class="p">,</span><span class="n">ls</span> <span class="o">=</span> <span class="s1">'dashed'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">val_acc_unreg</span><span class="p">,</span><span class="n">c</span><span class="o">=</span><span class="s1">'blue'</span><span class="p">,</span><span class="n">ls</span> <span class="o">=</span> <span class="s1">'dashed'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">train_acc_unreg</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">'Unregularized'</span><span class="p">,</span><span class="n">c</span><span class="o">=</span><span class="s1">'blue'</span><span class="p">,</span><span class="n">ls</span> <span class="o">=</span> <span class="s1">'solid'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="nb">max</span><span class="p">(</span><span class="n">val_acc_unreg</span><span class="p">),</span><span class="n">c</span> <span class="o">=</span> <span class="s1">'blue'</span><span class="p">,</span><span class="n">ls</span> <span class="o">=</span> <span class="s1">'dashed'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">val_acc_l1l2reg</span><span class="p">,</span><span class="n">c</span><span class="o">=</span><span class="s1">'orange'</span><span class="p">,</span><span class="n">ls</span> <span class="o">=</span> <span class="s1">'dashed'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">train_acc_l1l2reg</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">'L1+L2 regularized'</span><span class="p">,</span><span class="n">c</span><span class="o">=</span><span class="s1">'orange'</span><span class="p">,</span><span class="n">ls</span> <span class="o">=</span> <span class="s1">'solid'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="nb">max</span><span class="p">(</span><span class="n">val_acc_l1l2reg</span><span class="p">),</span><span class="n">c</span> <span class="o">=</span> <span class="s1">'orange'</span><span class="p">,</span><span class="n">ls</span> <span class="o">=</span> <span class="s1">'dashed'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">val_acc_l2reg</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">'red'</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">'dashed'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">train_acc_l2reg</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'L2 regularized'</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">'red'</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">'solid'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="nb">max</span><span class="p">(</span><span class="n">val_acc_l2reg</span><span class="p">),</span> <span class="n">c</span><span class="o">=</span><span class="s1">'red'</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">'dashed'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">val_acc_l1reg</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">'green'</span><span class="p">,</span> <span class="n">ls</span> <span class="o">=</span> <span class="s1">'dashed'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">train_acc_l1reg</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'L1 regularized'</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">'green'</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">'solid'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="nb">max</span><span class="p">(</span><span class="n">val_acc_l1reg</span><span class="p">),</span> <span class="n">c</span><span class="o">=</span><span class="s1">'green'</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">'dashed'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">val_acc_unreg</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">'blue'</span><span class="p">,</span> <span class="n">ls</span> <span class="o">=</span> <span class="s1">'dashed'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">train_acc_unreg</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'Unregularized'</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">'blue'</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">'solid'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="nb">max</span><span class="p">(</span><span class="n">val_acc_unreg</span><span class="p">),</span> <span class="n">c</span><span class="o">=</span><span class="s1">'blue'</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">'dashed'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">val_acc_l1l2reg</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">'orange'</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">'dashed'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">train_acc_l1l2reg</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'L1+L2 regularized'</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">'orange'</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">'solid'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="nb">max</span><span class="p">(</span><span class="n">val_acc_l1l2reg</span><span class="p">),</span> <span class="n">c</span><span class="o">=</span><span class="s1">'orange'</span><span class="p">,</span> <span class="n">ls</span> <span class="o">=</span> <span class="s1">'dashed'</span><span class="p">)</span>
 
 <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">'Unregularized Vs L1-Regularized vs L2-regularized Vs L1+L2 regularized'</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'epoch'</span><span class="p">)</span>
@@ -1716,10 +1735,10 @@ w^{(r)}_{ij}←w^{(r)}_{ij}−η\frac{\partial L}{\partial W^{(r)}_{ij}}−\eta 
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># @markdown #### Visualize Norm of the Models (Train Me!)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">param_norm_unreg</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">'Unregularized'</span><span class="p">,</span><span class="n">c</span><span class="o">=</span><span class="s1">'blue'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">param_norm_l1reg</span><span class="p">,</span><span class="n">label</span> <span class="o">=</span> <span class="s1">'L1 Regularized'</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">'green'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">param_norm_l2reg</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">'L2 Regularized'</span><span class="p">,</span><span class="n">c</span><span class="o">=</span><span class="s1">'red'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">param_norm_l1l2reg</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">'L1+L2 Regularized'</span><span class="p">,</span><span class="n">c</span><span class="o">=</span><span class="s1">'orange'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">param_norm_unreg</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'Unregularized'</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">'blue'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">param_norm_l1reg</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'L1 Regularized'</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">'green'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">param_norm_l2reg</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'L2 Regularized'</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">'red'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">param_norm_l1l2reg</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'L1+L2 Regularized'</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">'orange'</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">'Parameter Norm as a function of training Epoch'</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'epoch'</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'Parameter Norms'</span><span class="p">)</span>
@@ -1877,9 +1896,10 @@ w^{(r)}_{ij}←w^{(r)}_{ij}−η\frac{\partial L}{\partial W^{(r)}_{ij}}−\eta 
 <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">frame</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
   <span class="n">ax</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
-  <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span><span class="mi">0</span><span class="p">,:]</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span><span class="n">Y</span><span class="p">[:,</span><span class="mi">0</span><span class="p">,:]</span><span class="o">.</span><span class="n">numpy</span><span class="p">())</span>
-  <span class="n">plot</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X_test</span><span class="p">[:,</span><span class="mi">0</span><span class="p">,:]</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span><span class="n">running_predictions_dp</span><span class="p">[:,</span><span class="n">i</span><span class="p">])</span>
-  <span class="n">title</span> <span class="o">=</span> <span class="s2">"Epoch: "</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span> <span class="o">*</span> <span class="mi">500</span><span class="p">)</span>
+  <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span> <span class="n">Y</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">numpy</span><span class="p">())</span>
+  <span class="n">plot</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X_test</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span>
+                 <span class="n">running_predictions_dp</span><span class="p">[:,</span> <span class="n">i</span><span class="p">])</span>
+  <span class="n">title</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"Epoch: </span><span class="si">{</span><span class="n">i</span><span class="o">*</span><span class="mi">500</span><span class="si">}</span><span class="s2">"</span>
   <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
   <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"X axis"</span><span class="p">)</span>
   <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Y axis"</span><span class="p">)</span>
@@ -1903,8 +1923,8 @@ w^{(r)}_{ij}←w^{(r)}_{ij}−η\frac{\partial L}{\partial W^{(r)}_{ij}}−\eta 
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># @markdown #### Plot the train and test losses</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">test_loss_dp</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">'test_loss dropout'</span><span class="p">,</span><span class="n">c</span> <span class="o">=</span> <span class="s1">'blue'</span><span class="p">,</span><span class="n">ls</span><span class="o">=</span><span class="s1">'dashed'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">test_loss</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'test_loss'</span><span class="p">,</span><span class="n">c</span> <span class="o">=</span> <span class="s1">'red'</span><span class="p">,</span><span class="n">ls</span><span class="o">=</span><span class="s1">'dashed'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">test_loss_dp</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'test_loss dropout'</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">'blue'</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">'dashed'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">test_loss</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'test_loss'</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">'red'</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">'dashed'</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'loss'</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'epochs'</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">'dropout vs without dropout'</span><span class="p">)</span>
@@ -1921,8 +1941,8 @@ w^{(r)}_{ij}←w^{(r)}_{ij}−η\frac{\partial L}{\partial W^{(r)}_{ij}}−\eta 
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># @markdown #### Plot the train and test losses</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">train_loss_dp</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">'train_loss dropout'</span><span class="p">,</span><span class="n">c</span> <span class="o">=</span> <span class="s1">'blue'</span><span class="p">,</span><span class="n">ls</span><span class="o">=</span><span class="s1">'dashed'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">train_loss</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'train_loss'</span><span class="p">,</span><span class="n">c</span> <span class="o">=</span> <span class="s1">'red'</span><span class="p">,</span><span class="n">ls</span><span class="o">=</span><span class="s1">'dashed'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">train_loss_dp</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'train_loss dropout'</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">'blue'</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">'dashed'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">train_loss</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'train_loss'</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">'red'</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">'dashed'</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'loss'</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'epochs'</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">'dropout vs without dropout'</span><span class="p">)</span>
@@ -1939,8 +1959,8 @@ w^{(r)}_{ij}←w^{(r)}_{ij}−η\frac{\partial L}{\partial W^{(r)}_{ij}}−\eta 
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># @markdown #### Plot model weights with epoch</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model_norm_dp</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="s1">'dropout'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model_norm</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="s1">'no dropout'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model_norm_dp</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'dropout'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model_norm</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'no dropout'</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'norm of the model'</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'epochs'</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
@@ -2001,22 +2021,22 @@ w^{(r)}_{ij}←w^{(r)}_{ij}−η\frac{\partial L}{\partial W^{(r)}_{ij}}−\eta 
 <span class="n">model</span> <span class="o">=</span> <span class="n">AnimalNetDropout</span><span class="p">()</span>
 
 <span class="c1"># Train the model with Dropout</span>
-<span class="n">val_acc_dropout</span><span class="p">,</span> <span class="n">train_acc_dropout</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">model_dp</span> <span class="p">,</span><span class="n">_</span> <span class="o">=</span> <span class="n">main</span><span class="p">(</span><span class="n">args</span><span class="p">,</span>
-                                                          <span class="n">model</span><span class="p">,</span>
-                                                          <span class="n">train_loader</span><span class="p">,</span>
-                                                          <span class="n">val_loader</span><span class="p">,</span>
-                                                          <span class="n">img_test_dataset</span><span class="p">)</span>
+<span class="n">val_acc_dropout</span><span class="p">,</span> <span class="n">train_acc_dropout</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">model_dp</span> <span class="o">=</span> <span class="n">main</span><span class="p">(</span><span class="n">args</span><span class="p">,</span>
+                                                       <span class="n">model</span><span class="p">,</span>
+                                                       <span class="n">train_loader</span><span class="p">,</span>
+                                                       <span class="n">val_loader</span><span class="p">,</span>
+                                                       <span class="n">img_test_dataset</span><span class="p">)</span>
 
 <span class="c1"># intialize the BigAnimalNet model</span>
 <span class="n">set_seed</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="n">SEED</span><span class="p">)</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">BigAnimalNet</span><span class="p">()</span>
 
 <span class="c1"># Train the model</span>
-<span class="n">val_acc_big</span><span class="p">,</span> <span class="n">train_acc_big</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">model_big</span> <span class="p">,</span><span class="n">_</span> <span class="o">=</span> <span class="n">main</span><span class="p">(</span><span class="n">args</span><span class="p">,</span>
-                                                   <span class="n">model</span><span class="p">,</span>
-                                                   <span class="n">train_loader</span><span class="p">,</span>
-                                                   <span class="n">val_loader</span><span class="p">,</span>
-                                                   <span class="n">img_test_dataset</span><span class="p">)</span>
+<span class="n">val_acc_big</span><span class="p">,</span> <span class="n">train_acc_big</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">model_big</span> <span class="o">=</span> <span class="n">main</span><span class="p">(</span><span class="n">args</span><span class="p">,</span>
+                                                <span class="n">model</span><span class="p">,</span>
+                                                <span class="n">train_loader</span><span class="p">,</span>
+                                                <span class="n">val_loader</span><span class="p">,</span>
+                                                <span class="n">img_test_dataset</span><span class="p">)</span>
 
 
 <span class="c1"># Train and Test accuracy plot</span>
@@ -2075,10 +2095,12 @@ w^{(r)}_{ij}←w^{(r)}_{ij}−η\frac{\partial L}{\partial W^{(r)}_{ij}}−\eta 
 <span class="c1"># Creating train_loader and Val_loader</span>
 <span class="n">train_loader</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">DataLoader</span><span class="p">(</span><span class="n">img_train_data</span><span class="p">,</span>
                                            <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span>
+                                           <span class="n">num_workers</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
                                            <span class="n">worker_init_fn</span><span class="o">=</span><span class="n">seed_worker</span><span class="p">,</span>
                                            <span class="n">generator</span><span class="o">=</span><span class="n">g_seed</span><span class="p">)</span>
 <span class="n">val_loader</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">DataLoader</span><span class="p">(</span><span class="n">img_val_data</span><span class="p">,</span>
                                          <span class="n">batch_size</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+                                         <span class="n">num_workers</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
                                          <span class="n">worker_init_fn</span><span class="o">=</span><span class="n">seed_worker</span><span class="p">,</span>
                                          <span class="n">generator</span><span class="o">=</span><span class="n">g_seed</span><span class="p">)</span>
 </pre></div>
@@ -2131,20 +2153,20 @@ w^{(r)}_{ij}←w^{(r)}_{ij}−η\frac{\partial L}{\partial W^{(r)}_{ij}}−\eta 
 <span class="n">model_aug</span> <span class="o">=</span> <span class="n">AnimalNet</span><span class="p">()</span>
 
 <span class="c1"># train the model</span>
-<span class="n">val_acc_dataaug</span><span class="p">,</span> <span class="n">train_acc_dataaug</span><span class="p">,</span> <span class="n">param_norm_datadug</span><span class="p">,</span> <span class="n">_</span> <span class="p">,</span><span class="n">_</span> <span class="o">=</span> <span class="n">main</span><span class="p">(</span><span class="n">args</span><span class="p">,</span>
-                                                                    <span class="n">model_aug</span><span class="p">,</span>
-                                                                    <span class="n">new_train_loader</span><span class="p">,</span>
-                                                                    <span class="n">val_loader</span><span class="p">,</span>
-                                                                    <span class="n">img_test_dataset</span><span class="p">)</span>
+<span class="n">val_acc_dataaug</span><span class="p">,</span> <span class="n">train_acc_dataaug</span><span class="p">,</span> <span class="n">param_norm_datadug</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">main</span><span class="p">(</span><span class="n">args</span><span class="p">,</span>
+                                                                 <span class="n">model_aug</span><span class="p">,</span>
+                                                                 <span class="n">new_train_loader</span><span class="p">,</span>
+                                                                 <span class="n">val_loader</span><span class="p">,</span>
+                                                                 <span class="n">img_test_dataset</span><span class="p">)</span>
 <span class="c1"># Intialize the model</span>
 <span class="n">set_seed</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="n">SEED</span><span class="p">)</span>
 <span class="n">model_pure</span> <span class="o">=</span> <span class="n">AnimalNet</span><span class="p">()</span>
 
-<span class="n">val_acc_pure</span><span class="p">,</span> <span class="n">train_acc_pure</span><span class="p">,</span> <span class="n">param_norm_pure</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">main</span><span class="p">(</span><span class="n">args</span><span class="p">,</span>
-                                                           <span class="n">model_pure</span><span class="p">,</span>
-                                                           <span class="n">train_loader</span><span class="p">,</span>
-                                                           <span class="n">val_loader</span><span class="p">,</span>
-                                                           <span class="n">img_test_dataset</span><span class="p">)</span>
+<span class="n">val_acc_pure</span><span class="p">,</span> <span class="n">train_acc_pure</span><span class="p">,</span> <span class="n">param_norm_pure</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="o">=</span> <span class="n">main</span><span class="p">(</span><span class="n">args</span><span class="p">,</span>
+                                                         <span class="n">model_pure</span><span class="p">,</span>
+                                                         <span class="n">train_loader</span><span class="p">,</span>
+                                                         <span class="n">val_loader</span><span class="p">,</span>
+                                                         <span class="n">img_test_dataset</span><span class="p">)</span>
 
 
 <span class="c1"># Train and Test accuracy plot</span>
@@ -2272,11 +2294,11 @@ Each group has a 10 min discussion.</p>
     <span class="c1"># Learning rate</span>
     <span class="n">args</span><span class="p">[</span><span class="s1">'lr'</span><span class="p">]</span> <span class="o">=</span> <span class="n">lr</span>
     <span class="c1"># Train the model</span>
-    <span class="n">val_acc</span><span class="p">,</span> <span class="n">train_acc</span><span class="p">,</span> <span class="n">param_norm</span><span class="p">,</span><span class="n">_</span><span class="p">,</span><span class="n">_</span> <span class="o">=</span> <span class="n">main</span><span class="p">(</span><span class="n">args</span><span class="p">,</span>
-                                              <span class="n">model</span><span class="p">,</span>
-                                              <span class="n">train_loader</span><span class="p">,</span>
-                                              <span class="n">val_loader</span><span class="p">,</span>
-                                              <span class="n">img_test_dataset</span><span class="p">)</span>
+    <span class="n">val_acc</span><span class="p">,</span> <span class="n">train_acc</span><span class="p">,</span> <span class="n">param_norm</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">main</span><span class="p">(</span><span class="n">args</span><span class="p">,</span>
+                                             <span class="n">model</span><span class="p">,</span>
+                                             <span class="n">train_loader</span><span class="p">,</span>
+                                             <span class="n">val_loader</span><span class="p">,</span>
+                                             <span class="n">img_test_dataset</span><span class="p">)</span>
     <span class="c1"># store the outputs</span>
     <span class="n">acc_dict</span><span class="p">[</span><span class="sa">f</span><span class="s1">'val_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">'</span><span class="p">]</span> <span class="o">=</span> <span class="n">val_acc</span>
     <span class="n">acc_dict</span><span class="p">[</span><span class="sa">f</span><span class="s1">'train_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">'</span><span class="p">]</span> <span class="o">=</span> <span class="n">train_acc</span>
@@ -2292,18 +2314,25 @@ Each group has a 10 min discussion.</p>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># @markdown #### Plot Train and Validation accuracy (Run me)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">acc_dict</span><span class="p">[</span><span class="s1">'val_0'</span><span class="p">],</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">'dashed'</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">'lr = 5e-4 - validation'</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="s1">'blue'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">acc_dict</span><span class="p">[</span><span class="s1">'train_0'</span><span class="p">],</span><span class="n">label</span> <span class="o">=</span> <span class="s1">'5e-4 - train'</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="s1">'blue'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">acc_dict</span><span class="p">[</span><span class="s1">'val_1'</span><span class="p">],</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">'dashed'</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">'lr = 1e-3 - validation'</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="s1">'green'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">acc_dict</span><span class="p">[</span><span class="s1">'train_1'</span><span class="p">],</span><span class="n">label</span><span class="o">=</span><span class="s1">'1e-3 - train'</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="s1">'green'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">acc_dict</span><span class="p">[</span><span class="s1">'val_2'</span><span class="p">],</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">'dashed'</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">'lr = 5e-3 - validation'</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="s1">'purple'</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">acc_dict</span><span class="p">[</span><span class="s1">'train_2'</span><span class="p">],</span><span class="n">label</span> <span class="o">=</span> <span class="s1">'5e-3 - train'</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="s1">'purple'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">acc_dict</span><span class="p">[</span><span class="s1">'val_0'</span><span class="p">],</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">'dashed'</span><span class="p">,</span>
+         <span class="n">label</span><span class="o">=</span><span class="s1">'lr = 5e-4 - validation'</span><span class="p">,</span>
+         <span class="n">c</span><span class="o">=</span><span class="s1">'blue'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">acc_dict</span><span class="p">[</span><span class="s1">'train_0'</span><span class="p">],</span> <span class="n">label</span> <span class="o">=</span> <span class="s1">'5e-4 - train'</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">'blue'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">acc_dict</span><span class="p">[</span><span class="s1">'val_1'</span><span class="p">],</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">'dashed'</span><span class="p">,</span>
+         <span class="n">label</span><span class="o">=</span><span class="s1">'lr = 1e-3 - validation'</span><span class="p">,</span>
+         <span class="n">c</span><span class="o">=</span><span class="s1">'green'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">acc_dict</span><span class="p">[</span><span class="s1">'train_1'</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">'1e-3 - train'</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">'green'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">acc_dict</span><span class="p">[</span><span class="s1">'val_2'</span><span class="p">],</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">'dashed'</span><span class="p">,</span>
+         <span class="n">label</span><span class="o">=</span><span class="s1">'lr = 5e-3 - validation'</span><span class="p">,</span>
+         <span class="n">c</span><span class="o">=</span><span class="s1">'purple'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">acc_dict</span><span class="p">[</span><span class="s1">'train_2'</span><span class="p">],</span><span class="n">label</span> <span class="o">=</span> <span class="s1">'5e-3 - train'</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">'purple'</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">'Optimal Learning Rate'</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'Accuracy (%)'</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'Epoch'</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">'Maximum Test Accuracy obtained with lr = 5e-4: '</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">acc_dict</span><span class="p">[</span><span class="s1">'val_0'</span><span class="p">])))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">'Maximum Test Accuracy obtained with lr = 1e-3: '</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">acc_dict</span><span class="p">[</span><span class="s1">'val_1'</span><span class="p">])))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">'Maximum Test Accuracy obtained with lr = 5e-3: '</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">acc_dict</span><span class="p">[</span><span class="s1">'val_2'</span><span class="p">])))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Maximum Test Accuracy obtained with lr = 5e-4: </span><span class="si">{</span><span class="nb">max</span><span class="p">(</span><span class="n">acc_dict</span><span class="p">[</span><span class="s1">'val_0'</span><span class="p">])</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Maximum Test Accuracy obtained with lr = 1e-3: </span><span class="si">{</span><span class="nb">max</span><span class="p">(</span><span class="n">acc_dict</span><span class="p">[</span><span class="s1">'val_1'</span><span class="p">])</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Maximum Test Accuracy obtained with lr = 5e-3: </span><span class="si">{</span><span class="nb">max</span><span class="p">(</span><span class="n">acc_dict</span><span class="p">[</span><span class="s1">'val_2'</span><span class="p">])</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
