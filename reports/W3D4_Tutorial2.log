@@ -32,8 +32,9 @@ nbclient.exceptions.CellTimeoutError: A cell timed out while it was being execut
 The message was: Cell execution timed out.
 Here is a preview of the cell contents:
 -------------------
-['fname = "gt1.tif"', 'url = "https://www.suite2p.org/test_data/gt1.tif"', '', 'if not os.path.isfile(fname):', '  try:']
-...
-['', 'from tifffile import imread', 'data = imread(fname)', "print('imaging data of shape: ', data.shape)", 'n_time, Ly, Lx = data.shape']
+# @title Download and unzip the dataset
+
+!wget -q http://mmlab.ie.cuhk.edu.hk/projects/TCDCN/data/MTFL.zip
+!unzip -q /content/MTFL.zip
 -------------------
 
